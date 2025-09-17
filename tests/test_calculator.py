@@ -1,41 +1,34 @@
 import unittest
-from unittest.mock import patch
-from io import StringIO
-import app.calculator as calc
+from app.calculator import add, sub, mul, div, calculate
 
-class TestCalculatorInteractive(unittest.TestCase):
+class TestCalculator(unittest.TestCase):
+    def test_add(self): 
+        self.assertEqual(add(2, 3), 5)
 
-    @patch("builtins.input", side_effect=["2", "3", "+"])
-    @patch("sys.stdout", new_callable=StringIO)
-    def test_addition(self, mock_stdout, mock_input):
-        result = calc.run_calculator()
-        self.assertEqual(result, 5.0)
-        output = mock_stdout.getvalue()
-        self.assertIn("Result: 5.0", output)
+    def test_sub(self): 
+        self.assertEqual(sub(5, 2), 3)
 
-    @patch("builtins.input", side_effect=["10", "4", "-"])
-    @patch("sys.stdout", new_callable=StringIO)
-    def test_subtraction(self, mock_stdout, mock_input):
-        result = calc.run_calculator()
-        self.assertEqual(result, 6.0)
-        output = mock_stdout.getvalue()
-        self.assertIn("Result: 6.0", output)
+    def test_mul(self): 
+        self.assertEqual(mul(4, 3), 12)
 
-    @patch("builtins.input", side_effect=["3", "4", "*"])
-    @patch("sys.stdout", new_callable=StringIO)
-    def test_multiplication(self, mock_stdout, mock_input):
-        result = calc.run_calculator()
-        self.assertEqual(result, 12.0)
-        output = mock_stdout.getvalue()
-        self.assertIn("Result: 12.0", output)
+    def test_div(self):
+        self.assertEqual(div(10, 2), 5)
+        self.assertAlmostEqual(div(3, 2), 1.5)
 
-    @patch("builtins.input", side_effect=["5", "2", "/"])
-    @patch("sys.stdout", new_callable=StringIO)
-    def test_invalid_operation(self, mock_stdout, mock_input):
-        result = calc.run_calculator()
-        self.assertIsNone(result)
-        output = mock_stdout.getvalue()
-        self.assertIn("Invalid operation", output)
+    def test_div_by_zero(self):
+        with self.assertRaises(ZeroDivisionError):
+            div(1, 0)
+
+    def test_calculate_add(self): 
+        self.assertEqual(calculate(2, 3, "+"), 5)
+
+    def test_calculate_div(self):
+        self.assertEqual(calculate(9, 3, "/"), 3)
+
+    def test_calculate_bad_op(self):
+        with self.assertRaises(ValueError):
+            calculate(1, 2, "%")
 
 if __name__ == "__main__":
     unittest.main()
+
