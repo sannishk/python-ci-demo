@@ -50,6 +50,11 @@ jobs:
     needs: build_package
     runs-on: ubuntu-latest
     environment: production   # <-- requires manual approval
+
+
+    permissions:
+        contents:write
+
     steps:
       - name: Download artifact
         uses: actions/download-artifact@v4
